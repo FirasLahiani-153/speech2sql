@@ -1,43 +1,54 @@
-# Speech2SQL Backend Dependencies for Render.com
-# Compatible with Python 3.11
+# Speech2SQL Backend Dependencies
+# Python 3.11.9 Compatible
 
 # Web Framework
-flask==3.0.0
+flask==3.0.3
 flask-cors==4.0.0
 
 # Environment & Config
 python-dotenv==1.0.0
 
-# LangChain Stack (compatible versions)
-langchain==0.1.0
-langchain-openai==0.0.5
-langchain-community==0.0.10
-langchain-huggingface==0.0.1
-langchain-core==0.1.0
-langchain-text-splitters==0.0.1
+# LangChain Stack (stable for Python 3.11)
+langchain==0.1.20
+langchain-openai==0.1.1
+langchain-community==0.0.37
+langchain-core==0.1.23
 
 # RAG & Embeddings
 faiss-cpu==1.7.4
 sentence-transformers==2.2.2
-huggingface-hub==0.17.3
+huggingface-hub==0.21.4
 
 # Speech-to-Text (Vosk for Tunisian Arabic)
 vosk==0.3.45
 soundfile==0.12.1
-sounddevice==0.4.5
+sounddevice==0.4.6
 
 # Database
 mysql-connector-python==8.0.33
 
-# Utilities & ML
+# Utilities & Scientific Computing
 numpy==1.24.3
+scipy==1.11.4
+scikit-learn==1.3.2
 requests==2.31.0
-scipy==1.11.0
-scikit-learn==1.3.0
 
-# PyTorch (CPU only for Render - use latest available)
-torch==2.0.0
-torchvision==0.15.0
+# Machine Learning (CPU optimized)
+torch==2.0.1
+torchvision==0.15.2
+
+# Transformers & Model Utilities
+transformers==4.36.2
+peft==0.7.1
+accelerate==0.24.1
 
 # Anthropic SDK
 anthropic==0.7.1
+
+# Audio & Media
+librosa==0.10.0
+
+# Utilities
+tqdm==4.66.1
+pyyaml==6.0.1
+jinja2==3.1.2
