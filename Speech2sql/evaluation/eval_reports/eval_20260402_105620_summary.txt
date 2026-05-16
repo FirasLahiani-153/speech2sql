@@ -1,0 +1,18 @@
+TEXT-TO-SQL EVALUATION SUMMARY
+Model     : anthropic/claude-3-haiku
+Timestamp : 20260402_105620
+Cases     : 108
+
+total_queries                 : 108
+valid_syntax_rate             : 99.1%
+exact_match                   : 36.1%
+execution_match               : 63.9%
+partial_exec_gte50            : 55.6%
+avg_structural_sim            : 95.8%
+avg_token_jaccard             : 86.1%
+avg_keyword_coverage          : 98.1%
+
+Complexity Breakdown:
+  Simple: count=42, EX=54.8%, EM=42.9%, Jaccard=87.7%
+  Medium: count=52, EX=63.5%, EM=32.7%, Jaccard=83.3%
+  Complex: count=14, EX=92.9%, EM=28.6%, Jaccard=91.9%

@@ -1,0 +1,18 @@
+TEXT-TO-SQL EVALUATION SUMMARY
+Model     : deepseek/deepseek-chat-v3.1
+Timestamp : 20260330_085637
+Cases     : 108
+
+total_queries                 : 108
+valid_syntax_rate             : 82.4%
+exact_match                   : 18.5%
+execution_match               : 34.3%
+partial_exec_gte50            : 32.4%
+avg_structural_sim            : 92.7%
+avg_token_jaccard             : 77.8%
+avg_keyword_coverage          : 90.0%
+
+Complexity Breakdown:
+  Simple: count=42, EX=38.1%, EM=28.6%, Jaccard=83.8%
+  Medium: count=52, EX=30.8%, EM=9.6%, Jaccard=74.3%
+  Complex: count=14, EX=35.7%, EM=21.4%, Jaccard=73.3%

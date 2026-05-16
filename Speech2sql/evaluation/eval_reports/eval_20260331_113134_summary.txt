@@ -1,0 +1,18 @@
+TEXT-TO-SQL EVALUATION SUMMARY
+Model     : llama-3.3-70b-versatile
+Timestamp : 20260331_113134
+Cases     : 108
+
+total_queries                 : 108
+valid_syntax_rate             : 95.4%
+exact_match                   : 34.3%
+execution_match               : 62.0%
+partial_exec_gte50            : 47.2%
+avg_structural_sim            : 96.8%
+avg_token_jaccard             : 85.8%
+avg_keyword_coverage          : 95.7%
+
+Complexity Breakdown:
+  Simple: count=42, EX=50.0%, EM=35.7%, Jaccard=87.1%
+  Medium: count=52, EX=73.1%, EM=38.5%, Jaccard=86.0%
+  Complex: count=14, EX=57.1%, EM=14.3%, Jaccard=80.9%

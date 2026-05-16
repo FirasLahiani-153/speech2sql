@@ -1,0 +1,18 @@
+TEXT-TO-SQL EVALUATION SUMMARY
+Model     : qwen/qwen3.6-plus-preview:free
+Timestamp : 20260331_135311
+Cases     : 108
+
+total_queries                 : 108
+valid_syntax_rate             : 0.0%
+exact_match                   : 0.0%
+execution_match               : 0.0%
+partial_exec_gte50            : 0.0%
+avg_structural_sim            : 65.7%
+avg_token_jaccard             : 0.0%
+avg_keyword_coverage          : 0.0%
+
+Complexity Breakdown:
+  Simple: count=42, EX=0.0%, EM=0.0%, Jaccard=0.0%
+  Medium: count=52, EX=0.0%, EM=0.0%, Jaccard=0.0%
+  Complex: count=14, EX=0.0%, EM=0.0%, Jaccard=0.0%

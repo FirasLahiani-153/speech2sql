@@ -1,0 +1,330 @@
+id,question,complexity,valid_syntax,exact_match,execution_match,partial_exec_score,structural_sim,token_jaccard,keyword_coverage,error_category,response_time_s,generated_sql,ground_truth_sql
+1,Show all employees,Simple,True,True,True,1.0,1.0,1.0,1.0,,1.809,SELECT * FROM employees,SELECT * FROM employees
+2,List all offices,Simple,True,True,True,1.0,1.0,1.0,1.0,,3.792,SELECT * FROM offices,SELECT * FROM offices
+3,Show product names and their prices,Simple,True,False,False,0.0,1.0,0.6667,1.0,Other / logic error,2.119,"SELECT productName, MSRP 
+FROM products","SELECT productName, buyPrice FROM products"
+4,Display all payment amounts,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.826,SELECT amount FROM payments,SELECT amount FROM payments
+5,What are the different product lines?,Simple,True,False,True,1.0,0.875,0.6667,1.0,,0.765,SELECT DISTINCT productLine FROM productlines,SELECT DISTINCT productLine FROM products
+6,Show customer names and their country,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.664,"SELECT customerName, country 
+FROM customers","SELECT customerName, country FROM customers"
+7,List employees who work in San Francisco office,Medium,True,False,True,1.0,1.0,0.9375,1.0,,1.003,"SELECT e.employeeNumber, e.firstName, e.lastName
+FROM employees e
+JOIN offices o ON e.officeCode = o.officeCode
+WHERE o.city = 'San Francisco'","
+            SELECT e.firstName, e.lastName
+            FROM employees e
+            JOIN offices o ON e.officeCode = o.officeCode
+            WHERE o.city = 'San Francisco'
+        "
+8,Find all orders placed in 2003,Medium,True,False,True,1.0,1.0,0.8889,1.0,,1.008,"SELECT orderNumber, orderDate, customerNumber
+FROM orders
+WHERE YEAR(orderDate) = 2003","
+            SELECT orderNumber, orderDate
+            FROM orders
+            WHERE YEAR(orderDate) = 2003
+        "
+9,Show product names in the 'Classic Cars' product line,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.747,"SELECT productName 
+FROM products
+WHERE productLine = 'Classic Cars'","
+            SELECT productName
+            FROM products
+            WHERE productLine = 'Classic Cars'
+        "
+10,Which customers are from the USA?,Simple,True,False,False,0.0,1.0,0.7,1.0,Wrong aggregation,0.911,"SELECT customerNumber, customerName, country 
+FROM customers
+WHERE country = 'USA'","
+            SELECT customerName, city, state
+            FROM customers
+            WHERE country = 'USA'
+        "
+11,List products with price higher than $100,Simple,True,False,False,0.0,1.0,0.6667,1.0,Wrong filter/condition,0.787,"SELECT productCode, productName, MSRP 
+FROM products
+WHERE MSRP > 100","
+            SELECT productName, buyPrice
+            FROM products
+            WHERE buyPrice > 100
+        "
+12,Find payments made in 2004,Medium,True,False,True,1.0,1.0,0.9,1.0,,1.151,"SELECT checkNumber, customerNumber, paymentDate, amount
+FROM payments
+WHERE YEAR(paymentDate) = 2004","
+            SELECT customerNumber, amount, paymentDate
+            FROM payments
+            WHERE YEAR(paymentDate) = 2004
+        "
+13,How many employees work in each office?,Medium,True,False,False,0.0,0.875,0.7778,0.8333,Wrong JOIN logic,1.31,"SELECT o.city, COUNT(*) AS employeeCount
+FROM offices o
+JOIN employees e ON o.officeCode = e.officeCode
+GROUP BY o.city
+ORDER BY employeeCount DESC","
+            SELECT o.officeCode, o.city, COUNT(e.employeeNumber) AS employeeCount
+            FROM offices o
+            LEFT JOIN employees e ON o.officeCode = e.officeCode
+            GROUP BY o.officeCode, o.city
+        "
+14,What is the total amount paid by each customer?,Medium,True,False,False,0.0,0.625,0.5294,0.6667,Wrong aggregation,5.275,"SELECT customerNumber, SUM(amount) AS totalPaid
+FROM payments
+GROUP BY customerNumber","
+            SELECT c.customerNumber, c.customerName, SUM(p.amount) AS totalPaid
+            FROM customers c
+            JOIN payments p ON c.customerNumber = p.customerNumber
+            GROUP BY c.customerNumber, c.customerName
+            ORDER BY totalPaid DESC
+        "
+15,Count how many products are in each product line,Medium,True,False,True,1.0,1.0,0.8889,1.0,,2.713,"SELECT productLine, COUNT(*) AS productCount
+FROM products
+GROUP BY productLine","
+            SELECT productLine, COUNT(productCode) AS productCount
+            FROM products
+            GROUP BY productLine
+        "
+16,Find the average buy price for each product line,Medium,True,False,True,0.0,1.0,0.7273,1.0,,0.894,"SELECT p.productLine, AVG(p.buyPrice) AS avgBuyPrice
+FROM products p
+GROUP BY p.productLine","
+            SELECT productLine, AVG(buyPrice) AS avgPrice
+            FROM products
+            GROUP BY productLine
+        "
+17,Which product lines have more than 50 products?,Complex,True,False,True,1.0,1.0,0.9091,1.0,,0.921,"SELECT productLine, COUNT(*) AS productCount
+FROM products
+GROUP BY productLine
+HAVING COUNT(*) > 50","
+            SELECT productLine, COUNT(productCode) AS productCount
+            FROM products
+            GROUP BY productLine
+            HAVING COUNT(productCode) > 50
+        "
+18,Find employees who are not managers,Medium,True,False,True,1.0,0.875,0.5882,0.5,,1.283,"SELECT employeeNumber, firstName, lastName
+FROM employees
+WHERE employeeNumber NOT IN (
+  SELECT reportsTo
+  FROM employees
+  WHERE reportsTo IS NOT NULL
+)","
+            SELECT e.employeeNumber, e.firstName, e.lastName
+            FROM employees e
+            LEFT JOIN employees m ON e.employeeNumber = m.reportsTo
+            WHERE m.employeeNumber IS NULL
+        "
+19,Show the total quantity ordered for each product,Medium,True,False,False,0.0,0.75,0.6471,0.8333,Wrong aggregation,1.05,"SELECT productCode, SUM(quantityOrdered) AS totalOrdered
+FROM orderdetails
+GROUP BY productCode
+ORDER BY totalOrdered DESC","
+            SELECT p.productCode, p.productName, SUM(od.quantityOrdered) AS totalOrdered
+            FROM products p
+            JOIN orderdetails od ON p.productCode = od.productCode
+            GROUP BY p.productCode, p.productName
+            ORDER BY totalOrdered DESC
+        "
+20,Which customers have made more than 5 payments?,Complex,True,False,False,0.0,1.0,0.9412,1.0,Wrong JOIN logic,2.031,"SELECT c.customerNumber, c.customerName
+FROM customers c
+JOIN payments p ON c.customerNumber = p.customerNumber
+GROUP BY c.customerNumber, c.customerName
+HAVING COUNT(p.checkNumber) > 5","
+            SELECT c.customerNumber, c.customerName, COUNT(p.checkNumber) AS paymentCount
+            FROM customers c
+            JOIN payments p ON c.customerNumber = p.customerNumber
+            GROUP BY c.customerNumber, c.customerName
+            HAVING COUNT(p.checkNumber) > 5
+        "
+21,Show all customers,Simple,True,True,True,1.0,1.0,1.0,1.0,,1.223,"SELECT * 
+FROM customers",SELECT * FROM customers
+22,List all products,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.974,SELECT * FROM products,SELECT * FROM products
+23,Display all orders,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.822,SELECT * FROM orders,SELECT * FROM orders
+24,Show all product lines,Simple,True,True,True,1.0,1.0,1.0,1.0,,1.323,SELECT * FROM productlines,SELECT * FROM productlines
+25,List employee first names and last names,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.894,"SELECT firstName, lastName 
+FROM employees","SELECT firstName, lastName FROM employees"
+26,Show customer names and their credit limits,Simple,True,True,True,1.0,1.0,1.0,1.0,,2.751,"SELECT customerName, creditLimit
+FROM customers","SELECT customerName, creditLimit FROM customers"
+27,What are the distinct countries where customers are located?,Simple,True,True,True,1.0,1.0,1.0,1.0,,0.784,"SELECT DISTINCT country 
+FROM customers",SELECT DISTINCT country FROM customers
+28,Find all orders that have been shipped,Simple,True,False,False,1.0,1.0,0.6667,1.0,Wrong filter/condition,0.908,"SELECT orderNumber, orderDate, shippedDate, status 
+FROM orders
+WHERE shippedDate IS NOT NULL","
+            SELECT orderNumber, orderDate, shippedDate
+            FROM orders
+            WHERE status = 'Shipped'
+        "
+29,List products with quantity in stock less than 100,Simple,True,False,True,1.0,1.0,0.875,1.0,,1.277,"SELECT productCode, productName, quantityInStock 
+FROM products
+WHERE quantityInStock < 100","
+            SELECT productName, quantityInStock
+            FROM products
+            WHERE quantityInStock < 100
+        "
+30,Show employees with the job title 'Sales Rep',Simple,True,False,False,0.0,1.0,0.8182,1.0,Wrong filter/condition,0.619,"SELECT employeeNumber, firstName, lastName, jobTitle
+FROM employees
+WHERE jobTitle = 'Sales Rep'","
+            SELECT firstName, lastName, email
+            FROM employees
+            WHERE jobTitle = 'Sales Rep'
+        "
+31,Find customers with a credit limit greater than 100000,Simple,True,False,True,1.0,1.0,0.875,1.0,,0.826,"SELECT customerNumber, customerName, creditLimit
+FROM customers
+WHERE creditLimit > 100000","
+            SELECT customerName, creditLimit
+            FROM customers
+            WHERE creditLimit > 100000
+        "
+32,List all offices located in the USA,Simple,True,False,True,1.0,1.0,0.6667,1.0,,1.464,SELECT * FROM offices WHERE country = 'USA',"
+            SELECT officeCode, city, state
+            FROM offices
+            WHERE country = 'USA'
+        "
+33,Show orders placed in 2005,Medium,True,False,False,0.0,1.0,0.8,1.0,Wrong filter/condition,4.615,"SELECT orderNumber, orderDate, customerNumber
+FROM orders
+WHERE YEAR(orderDate) = 2005","
+            SELECT orderNumber, orderDate, status
+            FROM orders
+            WHERE YEAR(orderDate) = 2005
+        "
+34,Find products in the 'Motorcycles' product line,Simple,True,False,True,1.0,1.0,0.6667,1.0,,0.678,SELECT * FROM products WHERE productLine = 'Motorcycles',"
+            SELECT productName, buyPrice, quantityInStock
+            FROM products
+            WHERE productLine = 'Motorcycles'
+        "
+35,Show the order number and quantity ordered for each order detail,Simple,True,False,False,0.0,1.0,0.7143,1.0,Other / logic error,0.668,"SELECT orderNumber, quantityOrdered
+FROM orderdetails","
+            SELECT orderNumber, productCode, quantityOrdered, priceEach
+            FROM orderdetails
+        "
+36,List customers who do not have an assigned sales representative,Simple,True,False,False,0.0,1.0,0.7273,1.0,Wrong filter/condition,0.655,"SELECT c.customerNumber, c.customerName
+FROM customers c
+WHERE c.salesRepEmployeeNumber IS NULL","
+            SELECT customerName, country
+            FROM customers
+            WHERE salesRepEmployeeNumber IS NULL
+        "
+37,Show payments with an amount greater than 10000,Simple,True,False,False,0.0,1.0,0.8889,1.0,Wrong filter/condition,0.875,"SELECT checkNumber, customerNumber, amount 
+FROM payments
+WHERE amount > 10000","
+            SELECT customerNumber, checkNumber, amount, paymentDate
+            FROM payments
+            WHERE amount > 10000
+        "
+38,What is the total revenue generated from each order?,Medium,True,False,True,0.0,0.75,0.6111,1.0,,0.894,"SELECT o.orderNumber, SUM(od.quantityOrdered * od.priceEach) AS orderRevenue
+FROM orders o
+JOIN orderdetails od ON o.orderNumber = od.orderNumber
+GROUP BY o.orderNumber
+ORDER BY orderRevenue DESC","
+            SELECT orderNumber, SUM(quantityOrdered * priceEach) AS totalRevenue
+            FROM orderdetails
+            GROUP BY orderNumber
+            ORDER BY totalRevenue DESC
+        "
+39,How many orders has each customer placed?,Medium,True,False,False,1.0,0.75,0.6111,1.0,Wrong JOIN logic,1.063,"SELECT c.customerNumber, c.customerName, COUNT(o.orderNumber) AS orderCount
+FROM customers c
+LEFT JOIN orders o ON c.customerNumber = o.customerNumber
+GROUP BY c.customerNumber, c.customerName
+ORDER BY orderCount DESC","
+            SELECT customerNumber, COUNT(orderNumber) AS orderCount
+            FROM orders
+            GROUP BY customerNumber
+            ORDER BY orderCount DESC
+        "
+40,Find the most expensive product in each product line,Medium,True,False,False,0.0,0.875,0.4667,1.0,Incorrect subquery,1.637,"SELECT p.productLine, p.productCode, p.productName, p.MSRP
+FROM products p
+WHERE (p.productLine, p.MSRP) IN (
+    SELECT productLine, MAX(MSRP)
+    FROM products
+    GROUP BY productLine
+)","
+            SELECT productLine, MAX(buyPrice) AS maxPrice
+            FROM products
+            GROUP BY productLine
+        "
+41,Show the total number of orders per status,Medium,True,False,True,1.0,1.0,0.8889,1.0,,1.026,"SELECT status, COUNT(*) AS orderCount
+FROM orders
+GROUP BY status","
+            SELECT status, COUNT(orderNumber) AS orderCount
+            FROM orders
+            GROUP BY status
+        "
+42,What is the average credit limit per country?,Medium,True,False,True,1.0,1.0,0.9167,1.0,,1.095,"SELECT c.country, AVG(c.creditLimit) AS avgCreditLimit
+FROM customers c
+GROUP BY c.country
+ORDER BY avgCreditLimit DESC","
+            SELECT country, AVG(creditLimit) AS avgCreditLimit
+            FROM customers
+            GROUP BY country
+            ORDER BY avgCreditLimit DESC
+        "
+43,Show the total payment amount received per year,Medium,True,False,True,0.0,1.0,0.8462,1.0,,0.839,"SELECT YEAR(paymentDate) AS paymentYear, SUM(amount) AS totalPayment
+FROM payments
+GROUP BY YEAR(paymentDate)
+ORDER BY paymentYear","
+            SELECT YEAR(paymentDate) AS paymentYear, SUM(amount) AS totalAmount
+            FROM payments
+            GROUP BY YEAR(paymentDate)
+            ORDER BY paymentYear
+        "
+44,Find the number of customers assigned to each sales representative,Medium,True,False,False,0.0,0.5,0.3333,0.5714,Wrong JOIN logic,1.385,"SELECT e.employeeNumber, e.firstName, e.lastName, COUNT(*) AS customerCount
+FROM employees e
+LEFT JOIN customers c ON e.employeeNumber = c.salesRepEmployeeNumber
+GROUP BY e.employeeNumber, e.firstName, e.lastName","
+            SELECT salesRepEmployeeNumber, COUNT(customerNumber) AS customerCount
+            FROM customers
+            WHERE salesRepEmployeeNumber IS NOT NULL
+            GROUP BY salesRepEmployeeNumber
+            ORDER BY customerCount DESC
+        "
+45,Which customers have never placed an order?,Medium,True,True,True,1.0,1.0,1.0,1.0,,1.264,"SELECT c.customerNumber, c.customerName
+FROM customers c
+LEFT JOIN orders o ON c.customerNumber = o.customerNumber
+WHERE o.orderNumber IS NULL","
+            SELECT c.customerNumber, c.customerName
+            FROM customers c
+            LEFT JOIN orders o ON c.customerNumber = o.customerNumber
+            WHERE o.orderNumber IS NULL
+        "
+46,Find the top 5 customers by total payment amount,Medium,True,False,True,0.0,1.0,0.9,1.0,,1.5,"SELECT c.customerNumber, c.customerName, SUM(p.amount) AS totalPayment
+FROM customers c
+JOIN payments p ON c.customerNumber = p.customerNumber
+GROUP BY c.customerNumber, c.customerName
+ORDER BY totalPayment DESC
+LIMIT 5","
+            SELECT c.customerNumber, c.customerName, SUM(p.amount) AS totalPaid
+            FROM customers c
+            JOIN payments p ON c.customerNumber = p.customerNumber
+            GROUP BY c.customerNumber, c.customerName
+            ORDER BY totalPaid DESC
+            LIMIT 5
+        "
+47,Show product lines where the average buy price exceeds 50,Complex,True,False,True,0.0,1.0,0.8333,1.0,,1.122,"SELECT productLine, AVG(buyPrice) AS avgBuyPrice
+FROM products
+GROUP BY productLine
+HAVING AVG(buyPrice) > 50","
+            SELECT productLine, AVG(buyPrice) AS avgPrice
+            FROM products
+            GROUP BY productLine
+            HAVING AVG(buyPrice) > 50
+        "
+48,List employees and the name of their direct manager,Medium,True,False,True,0.0,1.0,0.6667,1.0,,0.872,"SELECT e.firstName AS empFirst, e.lastName AS empLast,
+       m.firstName AS mgrFirst, m.lastName AS mgrLast
+FROM employees e
+LEFT JOIN employees m ON e.reportsTo = m.employeeNumber","
+            SELECT e.firstName, e.lastName, m.firstName AS managerFirstName, m.lastName AS managerLastName
+            FROM employees e
+            LEFT JOIN employees m ON e.reportsTo = m.employeeNumber
+        "
+49,Find orders that contain more than 5 distinct products,Complex,True,False,False,0.0,1.0,0.8333,1.0,Wrong aggregation,0.737,"SELECT orderNumber
+FROM orderdetails
+GROUP BY orderNumber
+HAVING COUNT(DISTINCT productCode) > 5","
+            SELECT orderNumber, COUNT(productCode) AS productCount
+            FROM orderdetails
+            GROUP BY orderNumber
+            HAVING COUNT(productCode) > 5
+        "
+50,Show the total quantity ordered and total revenue for each product,Medium,True,False,True,0.0,1.0,0.9,1.0,,1.521,"SELECT p.productCode, p.productName, SUM(od.quantityOrdered) AS totalQuantityOrdered, SUM(od.quantityOrdered * od.priceEach) AS totalRevenue
+FROM products p
+JOIN orderdetails od ON p.productCode = od.productCode
+GROUP BY p.productCode, p.productName
+ORDER BY totalRevenue DESC","
+            SELECT p.productCode, p.productName,
+                   SUM(od.quantityOrdered) AS totalQuantity,
+                   SUM(od.quantityOrdered * od.priceEach) AS totalRevenue
+            FROM products p
+            JOIN orderdetails od ON p.productCode = od.productCode
+            GROUP BY p.productCode, p.productName
+            ORDER BY totalRevenue DESC
+        "
