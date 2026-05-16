@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: speech2sql-api
+    runtime: python311
+    buildCommand: pip install -r requirements.txt
+    startCommand: python api_server.py
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: API_PORT
+        value: 10000
+      - key: API_HOST
+        value: "0.0.0.0"
