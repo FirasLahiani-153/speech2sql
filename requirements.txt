@@ -1,5 +1,5 @@
 # Speech2SQL Backend Dependencies
-# Python 3.11.9 Compatible
+# Python 3.11.9 Compatible - No Conflicts
 
 # Web Framework
 flask==3.0.3
@@ -8,11 +8,11 @@ flask-cors==4.0.0
 # Environment & Config
 python-dotenv==1.0.0
 
-# LangChain Stack (stable for Python 3.11)
-langchain==0.1.20
-langchain-openai==0.1.1
-langchain-community==0.0.37
-langchain-core==0.1.23
+# LangChain Stack (matching versions)
+langchain==0.0.352
+langchain-openai==0.0.11
+langchain-community==0.0.12
+langchain-core==0.0.12
 
 # RAG & Embeddings
 faiss-cpu==1.7.4
